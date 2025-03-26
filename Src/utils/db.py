@@ -1,5 +1,13 @@
 import mysql.connector
 
+"""
+
+This is context manager to create connection with thse bd,
+then creating cursor and returning to perform sql queries,
+then committing and closing the connection
+
+"""
+
 
 class OpenDb:
     def __init__(self):

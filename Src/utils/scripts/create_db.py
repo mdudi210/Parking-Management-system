@@ -49,7 +49,7 @@ cursor.execute(
     """
     CREATE TABLE IF NOT EXISTS Vehicles(
         vehicle_id INT AUTO_INCREMENT PRIMARY KEY,
-        vehicle_number VARCHAR(50) NOT NULL UNIQUE,
+        vehicle_number VARCHAR(50) NOT NULL,
         owner_name VARCHAR(100) NOT NULL,
         vehicle_type VARCHAR(50) NOT NULL,
         user_id INT,
@@ -143,13 +143,13 @@ cursor.execute(
     """
     INSERT INTO Users(username,password,role) VALUES (%s,%s,%s)
 """,
-    ("admin", hashlib.sha256("admin123".encode("utf-8")).hexdigest(), 1),
+    ("admin", hashlib.sha512("admin123".encode("utf-8")).hexdigest(), 1),
 )
 cursor.execute(
     """
     INSERT INTO Users(username,password,role) VALUES (%s,%s,%s)
 """,
-    ("user", hashlib.sha256("user123".encode("utf-8")).hexdigest(), 2),
+    ("user", hashlib.sha512("user123".encode("utf-8")).hexdigest(), 2),
 )
 print(
     """
@@ -163,7 +163,7 @@ print(
 """
 )
 
-# Comminting changes
+# Committing changes
 conn.commit()
-# Closeing connection
+# Closing connection
 conn.close()

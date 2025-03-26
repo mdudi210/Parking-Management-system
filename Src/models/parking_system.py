@@ -1,87 +1,111 @@
 from Src.utils import db
-import hashlib
-from Src.models import user, pricing, parking_slot
+from Src.models import user, pricing, parking_slot, parking_record
 
 
 class ParkingSystem:
-    def welcome_page(self):
-        print("Welcome to watchguard Parking")
-        username = input("Enter your User Name:- ").strip()
-        password = input("Enter your Password:- ")
+    def __init__(self):
+        self.current_user = None
 
-        auth = user.User(username=username, password=password).login()
-        if not auth:
-            print("\n\n**Username or Password is incorrect**\n\n")
-            self.welcome_page()
-        elif auth[2] == 1:
+    def welcome_page(self):
+        print("Welcome to WatchGuard Parking")
+
+        while True:
+            username = input("Enter your User Name: ").strip()
+            password = input("Enter your Password: ")
+
+            auth = user.User(username=username, password=password).login()
+            if not auth:
+                print("\n** Username or Password is incorrect. Please try again. **\n")
+            else:
+                self.current_user = {
+                    "user_id": auth[0],
+                    "username": auth[1],
+                    "role": auth[3],
+                }
+                break
+
+        if self.current_user["role"] == 1:
             self.admin_menu()
-        elif auth[2] == 2:
+        elif self.current_user["role"] == 2:
             self.customer_menu()
         else:
-            print("somthing went wrong")
+            print("Something went wrong.")
 
-    # Admin menu option
+    def get_option(self, menu_options):
+        while True:
+            try:
+                option = int(input("Enter Your Option: "))
+                if option in menu_options:
+                    return option
+                print("Invalid option. Please try again.")
+            except ValueError:
+                print("Input must be an integer.")
+
     def admin_menu(self):
-        print(
-            """Welcome Admin, please select an option:
-            1. Add User
-            2. Manage Parking Slots
-            3. Set Pricing Rates
-            4. View Income (Daily/Monthly)
-            5. View Total Income per Vehicle
-            6. Log Out"""
-        )
-        try:
-            option = int(input("Enter Your Option:- "))
-        except ValueError as e:
-            print("Input must be an Integer")
-            option = 0
-        match option:
-            case 1:
-                if not user.User().add_user():
-                    self.admin_menu()
-            case 2:
-                if not parking_slot.ParkingSlot().manage_slot():
-                    self.admin_menu()
-            case 3:
-                if not pricing.Pricing().set_price():
-                    self.admin_menu()
-            case 4:
-                pass
-            case 5:
-                pass
-            case 6:
-                self.welcome_page()
-            case _:
-                print("You have Entered Wrong Option")
-                self.admin_menu()
+        """Admin menu options."""
+        while True:
+            print(
+                """\nWelcome Admin, please select an option:
+                1. Add User
+                2. Manage Parking Slots
+                3. Set Pricing Rates
+                4. View Income (Daily/Monthly)
+                5. View Total Income per Vehicle
+                6. Log Out"""
+            )
+            option = self.get_option({1, 2, 3, 4, 5, 6})
 
-    # Customer menu option
-    def customer_menu(self):
-        print(
-            """Welcome User, please select an option:
-              1. View Available Parking Slots
-              2. Park Vehicle
-              3. Unpark Vehicle
-              4. View Parking History
-              5. Log Out"""
-        )
-        try:
-            option = int(input("Enter Your Option"))
-        except ValueError as e:
-            print("Input must be an Integer")
-            option = 0
-        match option:
-            case 1:
+            if option == 1:
+                user.User().add_user()
+            elif option == 2:
+                parking_slot.ParkingSlot().manage_slot()
+            elif option == 3:
+                pricing.Pricing().set_price()
+            elif option == 4:
+                # Implement view income functionality
                 pass
-            case 2:
+            elif option == 5:
+                # Implement total income per vehicle
                 pass
-            case 3:
-                pass
-            case 4:
-                pass
-            case 5:
+            elif option == 6:
+                self.current_user = None
                 self.welcome_page()
-            case _:
-                print("You have Entered Wrong Option")
-                self.customer_menu()
+                break
+
+    def customer_menu(self):
+        """Customer menu options."""
+        while True:
+            print(
+                """\nWelcome User, please select an option:
+                1. View Available Parking Slots
+                2. Park Vehicle
+                3. Unpark Vehicle
+                4. View Parking History
+                5. Log Out"""
+            )
+            option = self.get_option({1, 2, 3, 4, 5})
+
+            if option == 1:
+                parking_slot.ParkingSlot().is_available_slots()
+            elif option == 2:
+                parking_record.ParkingRecord(
+                    user_id=self.current_user["user_id"],
+                    username=self.current_user["username"],
+                    role=self.current_user["role"],
+                ).park_vehicle()
+            elif option == 3:
+                parking_record.ParkingRecord(
+                    user_id=self.current_user["user_id"],
+                    username=self.current_user["username"],
+                    role=self.current_user["role"],
+                ).unpark_vehicle()
+            elif option == 4:
+                parking_record.ParkingRecord(
+                    user_id=self.current_user["user_id"],
+                    username=self.current_user["username"],
+                    role=self.current_user["role"],
+                ).parking_history()
+            elif option == 5:
+                self.current_user = None
+                self.welcome_page()
+                break
