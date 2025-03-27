@@ -1,4 +1,4 @@
-from Src.utils.db import OpenDb
+from src.utils.db import OpenDb
 
 
 class VehicleRegister:
@@ -36,4 +36,4 @@ class VehicleRegister:
                     f"Vehicle {vehicle_type}: {vehicle_number} registered successfully."
                 )
                 # Get the last inserted vehicle_id
-                return cursor.lastrowid
+                return cursor.lastrowid, user_id

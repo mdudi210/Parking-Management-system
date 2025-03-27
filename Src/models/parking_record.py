@@ -1,13 +1,12 @@
 from datetime import datetime
-from Src.utils.db import OpenDb
-from Src.models.vehicle_register import VehicleRegister
-from Src.models.parking_slot import ParkingSlot
-from Src.models.user import User
+from src.utils.db import OpenDb
+from src.models.vehicle_register import VehicleRegister
+from src.models.parking_slot import ParkingSlot
 
 
 class ParkingRecord:
     """
-    To mantain seesion for users
+    To maintain session for users
     """
 
     def __init__(self, user_id=0, username="", password="", role=None):
@@ -24,14 +23,18 @@ class ParkingRecord:
         with OpenDb() as cursor:
             # Fetching parking records for vehicles owned by this user
             cursor.execute(
-                # """SELECT V.vehicle_number, PR.entry_time, PR.exit_time, PR.parking_fee
+                # """SELECT V.vehicle_number, PR.entry_time,
+                # PR.exit_time, PR.parking_fee
                 #    FROM ParkingRecords PR
                 #    JOIN Vehicles V ON PR.vehicle_id = V.vehicle_id
                 #    WHERE V.user_id = %s
                 #    ORDER BY PR.entry_time DESC""",
-                """SELECT Vehicles.vehicle_number, ParkingRecords.entry_time, PArkingRecords.exit_time, ParkingRecords.parking_fee
-                FROM ParkingRecords JOIN Vehicles ON ParkingRecords.vehicle_id = Vehicles.vehicle_id
-                WHERE Vehicles.user_id = %s ORDER BY ParkingRecords.entry_time DESC""",
+                """SELECT Vehicles.vehicle_number, ParkingRecords.entry_time,
+                PArkingRecords.exit_time, ParkingRecords.parking_fee
+                FROM ParkingRecords JOIN Vehicles ON
+                ParkingRecords.vehicle_id = Vehicles.vehicle_id
+                WHERE Vehicles.user_id = %s
+                ORDER BY ParkingRecords.entry_time DESC""",
                 (self.user_id,),
             )
             records = cursor.fetchall()
@@ -44,7 +47,8 @@ class ParkingRecord:
             print("\nParking History:")
             print("-" * 90)
             print(
-                f"{'Vehicle Number':<20}{'Entry Time':<25}{'Exit Time':<25}{'Fee':<20}"
+                f"{'Vehicle Number':<20}{'Entry Time':<25} \
+                {'Exit Time':<25}{'Fee':<20}"
             )
             print("-" * 90)
 
@@ -52,17 +56,15 @@ class ParkingRecord:
                 vehicle_number, entry_time, exit_time, fee = record
                 exit_time_str = exit_time if exit_time else "Still Parked"
                 fee_str = f"${fee:.2f}" if fee is not None else "N/A"
-                entry_time_str = str(entry_time)
                 print(
-                    f"{vehicle_number:<20}{entry_time_str:<25}{exit_time_str:<25}{fee_str:<20}"
+                    f"{vehicle_number:<20}{str(entry_time):<25} \
+                    {str(exit_time_str):<25}{fee_str:<20}"
                 )
 
             print("-" * 90)
 
     """
-    
-    This is for prking the vehicle
-
+    This is for parking the vehicle
     """
 
     def park_vehicle(self):
@@ -93,8 +95,25 @@ class ParkingRecord:
 
         # if vehicle is registered with different user then
         if user_id != self.user_id:
-            print("This car is registered with different user you can park this")
+            print(
+                f"This vehicle is registered with \
+                    different user you can't park this"
+            )
             return None
+
+        # if vehicle is already parked then what?
+        with OpenDb() as cursor:
+            cursor.execute(
+                """SELECT record_id, slot_id, entry_time FROM ParkingRecords
+                    WHERE vehicle_id = %s AND exit_time IS NULL""",
+                (vehicle_id,),
+            )
+            parking_record = cursor.fetchone()
+            print(parking_record)
+
+            if parking_record:
+                print("vehicle is already parked...!!")
+                return
 
         # Assign a parking slot
         slot_id = ParkingSlot.assign_slot(vehicle_type_db)
@@ -106,12 +125,14 @@ class ParkingRecord:
         entry_time = datetime.now()
         with OpenDb() as cursor:
             cursor.execute(
-                "INSERT INTO ParkingRecords (vehicle_id, slot_id, entry_time) VALUES (%s, %s, %s)",
+                """INSERT INTO ParkingRecords (vehicle_id, slot_id, entry_time)"
+                VALUES (%s, %s, %s)""",
                 (vehicle_id, slot_id, entry_time),
             )
 
         print(
-            f"Vehicle successfully parked! Entry Time: {entry_time.strftime('%I:%M %p')}"
+            f"Vehicle successfully parked! Entry Time:\
+                {entry_time.strftime('%I:%M %p')}"
         )
         return True
 
@@ -142,7 +163,7 @@ class ParkingRecord:
 
             entry_time, vehicle_type = record
             exit_time = datetime.now()
-            # Chargeing atleast for one hour
+            # Charging at least for one hour
             hours_parked = max(1, (exit_time - entry_time).total_seconds() / 3600)
 
             # Getting pricing for per hour

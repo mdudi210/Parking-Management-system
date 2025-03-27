@@ -1,5 +1,6 @@
-from Src.utils import db
 import hashlib
+from src.utils import db
+from src.system import System
 
 
 class User:
@@ -50,11 +51,7 @@ class User:
 
     def add_user(self):
         while True:
-            print(
-                """ADD USER
-                1. Add User
-                2. Exit"""
-            )
+            print(System.ADD_USER)
 
             try:
                 option = int(input("Enter (1/2): "))

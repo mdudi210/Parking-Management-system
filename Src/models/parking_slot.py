@@ -1,9 +1,10 @@
-from Src.utils.db import OpenDb
+from src.utils.db import OpenDb
+from src.system import System
 
 
 class ParkingSlot:
     """
-    This to unassign slot to vehilce
+    This to unassign slot to vehicle
     """
 
     def unassign_slot(self, slot_id):
@@ -16,7 +17,7 @@ class ParkingSlot:
             print(f"Slot {slot_id} is now available.")
 
     """
-    This to assign slot to vehilce
+    This to assign slot to vehicle
     """
 
     def assign_slot(vehicle_type):
@@ -66,18 +67,13 @@ class ParkingSlot:
 
     """
     
-    This will used to get slot type for vehicles to update slots count or to update price (helpping function) 
+    This will used to get slot type for vehicles to update slots count or to update price (helping function) 
     """
 
     def get_slot_type(self):
 
         while True:
-            print(
-                """Slot type:
-                1. 4-wheeler
-                2. 2-wheeler
-                3. Exit"""
-            )
+            print(System.GET_SLOT_TYPE)
             try:
                 slot_type = int(input("Enter slot type (1/2/3): "))
                 if slot_type == 1:
@@ -99,12 +95,7 @@ class ParkingSlot:
     def manage_slot_menu(self):
         """Displays and handles parking slot management menu selection."""
         while True:
-            print(
-                """Managing Parking Slots:
-                1. Add new slot
-                2. Remove slot
-                3. Exit"""
-            )
+            print(System.MANAGE_SLOT_MENU)
             try:
                 option = int(input("Enter (1/2/3): "))
                 if option in [1, 2, 3]:
@@ -118,12 +109,13 @@ class ParkingSlot:
     This will slot the slot from DB 
 
     **Here if slot is occupied then that slot will be removed and i need to add that case in my code**
+    **Implemented this case**
     """
 
     def remove_slot(self):
         # Fetching from ParkingSlots
         with OpenDb() as cursor:
-            cursor.execute("SELECT slot_id, slot_type FROM ParkingSlots")
+            cursor.execute("SELECT slot_id, slot_type, is_occupied FROM ParkingSlots")
             slots = cursor.fetchall()
 
             # no slots available then
@@ -133,16 +125,34 @@ class ParkingSlot:
 
             # to choose which slot you need to delete
             print("Available Slots:")
+            print("-" * 60)
+            print(f"{"ID":<8}{"Type":<20}{"Occupied/Not Occupied"}")
+            print("-" * 60)
             for slot in slots:
-                print(f"ID: {slot[0]}, Type: {slot[1]}")
+                print(
+                    f"{slot[0]:<8}{slot[1]:<20}{"Occupied" if slot[2]==1 else "Not Occupied"}"
+                )
+            print("-" * 60)
 
             try:
-                slot_id = int(input("Enter Slot ID to remove: "))
-                # Deleteing slot from ParkingSlots
+                slot_id = int(input("\nEnter Slot ID to remove: "))
+
+                """
+                Checking if slot is occupied then can't remove this slot 
+                """
+                # print([slot[0] for slot in ParkingSlot.get_available_slots()])
+                if slot_id not in [
+                    slot[0] for slot in ParkingSlot.get_available_slots()
+                ]:
+                    print("You can't remove this slot as vehicle")
+                    return
+
+                # Deleting slot from ParkingSlots
                 cursor.execute(
                     "DELETE FROM ParkingSlots WHERE slot_id = %s", (slot_id,)
                 )
                 if cursor.rowcount > 0:
+                    # if any update is done then only print this
                     print(f"Slot ID {slot_id} removed successfully!")
                 else:
                     print(f"Slot ID {slot_id} not found.")
@@ -168,7 +178,7 @@ class ParkingSlot:
 
     """
 
-    This for manageing slots 
+    This for managing slots 
     Adding and removing slots
 
     """
@@ -180,7 +190,7 @@ class ParkingSlot:
                 # Adding slot
                 self.add_slot()
             elif option == 2:
-                # Removeing slot
+                # Removing slot
                 self.remove_slot()
             else:
                 # Exit

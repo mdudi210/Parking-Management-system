@@ -1,11 +1,12 @@
 import mysql.connector
 import hashlib
+from assests.config import Config
 
 # Connect to MySQL Server (without specifying a database)
 conn = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="Watchguard@01",
+    host=Config.HOST,
+    user=Config.USER,
+    password=Config.PASSWORD,
 )
 
 cursor = conn.cursor()

@@ -1,5 +1,7 @@
-from Src.utils import db
-from Src.models import user, pricing, parking_slot, parking_record
+import getpass
+from src.utils import db
+from src.models import user, pricing, parking_slot, parking_record
+from src.system import System
 
 
 class ParkingSystem:
@@ -10,8 +12,9 @@ class ParkingSystem:
         print("Welcome to WatchGuard Parking")
 
         while True:
-            username = input("Enter your User Name: ").strip()
-            password = input("Enter your Password: ")
+            username = input(System.ENTER_NAME).strip()
+            # Using this you can make your password invisible in terminal or cmd
+            password = getpass.getpass("Enter your Password: ")
 
             auth = user.User(username=username, password=password).login()
             if not auth:
@@ -44,15 +47,7 @@ class ParkingSystem:
     def admin_menu(self):
         """Admin menu options."""
         while True:
-            print(
-                """\nWelcome Admin, please select an option:
-                1. Add User
-                2. Manage Parking Slots
-                3. Set Pricing Rates
-                4. View Income (Daily/Monthly)
-                5. View Total Income per Vehicle
-                6. Log Out"""
-            )
+            print(System.ADMIN_MENU)
             option = self.get_option({1, 2, 3, 4, 5, 6})
 
             if option == 1:
@@ -75,14 +70,7 @@ class ParkingSystem:
     def customer_menu(self):
         """Customer menu options."""
         while True:
-            print(
-                """\nWelcome User, please select an option:
-                1. View Available Parking Slots
-                2. Park Vehicle
-                3. Unpark Vehicle
-                4. View Parking History
-                5. Log Out"""
-            )
+            print(System.CUSTOMER_MENU)
             option = self.get_option({1, 2, 3, 4, 5})
 
             if option == 1:

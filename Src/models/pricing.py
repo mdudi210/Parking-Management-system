@@ -1,4 +1,5 @@
-from Src.utils.db import OpenDb
+from src.utils.db import OpenDb
+from src.system import System
 
 
 class Pricing:
@@ -7,12 +8,7 @@ class Pricing:
     """
 
     def display_menu(self):
-        print(
-            """Set Pricing for Parking:
-            1. 4-Wheeler - $? per hour
-            2. 2-Wheeler - $? per hour
-            3. Exit"""
-        )
+        print(System.DISPLAY_MENU)
         while True:
             try:
                 option = int(input("Enter (1/2/3): "))

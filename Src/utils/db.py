@@ -1,8 +1,9 @@
 import mysql.connector
+from assests.config import Config
 
 """
 
-This is context manager to create connection with thse bd,
+This is context manager to create connection with this bd,
 then creating cursor and returning to perform sql queries,
 then committing and closing the connection
 
@@ -11,10 +12,10 @@ then committing and closing the connection
 
 class OpenDb:
     def __init__(self):
-        self.host = "localhost"
-        self.user = "root"
-        self.password = "Watchguard@01"
-        self.database = "ParkingSystem"
+        self.host = Config.HOST
+        self.user = Config.USER
+        self.password = Config.PASSWORD
+        self.database = Config.DATABASE
         self.connection = None
         self.cursor = None
 
