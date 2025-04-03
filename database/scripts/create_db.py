@@ -12,12 +12,12 @@ conn = mysql.connector.connect(
 cursor = conn.cursor()
 
 # Creating Database
-cursor.execute("CREATE DATABASE IF NOT EXISTS ParkingSystem")
+cursor.execute(f"CREATE DATABASE IF NOT EXISTS {Config.DATABASE}")
 print("Database created successfully!")
 
 # Going into Database
-cursor.execute("""use ParkingSystem""")
-print("Using ParkingSystem database!")
+cursor.execute(f"use {Config.DATABASE}")
+print("Using your database!")
 
 # Creating Users table
 cursor.execute(
@@ -163,6 +163,23 @@ print(
       }
 """
 )
+
+cursor.execute("""DELIMITER $$
+
+CREATE PROCEDURE GetParkingHistory(IN userId INT)
+BEGIN
+    SELECT Vehicles.vehicle_number, 
+           ParkingRecords.entry_time,
+           ParkingRecords.exit_time, 
+           ParkingRecords.parking_fee
+    FROM ParkingRecords
+    JOIN Vehicles ON ParkingRecords.vehicle_id = Vehicles.vehicle_id
+    WHERE Vehicles.user_id = userId
+    ORDER BY ParkingRecords.entry_time DESC;
+END$$
+
+DELIMITER ;""")
+
 
 # Committing changes
 conn.commit()

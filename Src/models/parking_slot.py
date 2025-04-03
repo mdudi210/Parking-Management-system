@@ -1,5 +1,6 @@
 from src.utils.db import OpenDb
 from src.system import System
+from src.dbutils import DbConfig
 
 
 class ParkingSlot:
@@ -11,8 +12,7 @@ class ParkingSlot:
         # Update in ParkingSlots table
         with OpenDb() as cursor:
             cursor.execute(
-                "UPDATE ParkingSlots SET is_occupied = FALSE WHERE slot_id = %s",
-                (slot_id,),
+                DbConfig.UNASSIGN_SLOT,(slot_id,),
             )
             print(f"Slot {slot_id} is now available.")
 
@@ -24,16 +24,14 @@ class ParkingSlot:
         # fetching slot_id to assign slot
         with OpenDb() as cursor:
             cursor.execute(
-                "SELECT slot_id FROM ParkingSlots WHERE slot_type = %s AND is_occupied = 0 LIMIT 1",
-                (vehicle_type,),
+                DbConfig.ASSIGN_SLOT,(vehicle_type,),
             )
             slot = cursor.fetchone()
             if slot:
                 slot_id = slot[0]
                 # Updating ParkingSlots table for occupied slot
                 cursor.execute(
-                    "UPDATE ParkingSlots SET is_occupied = 1 WHERE slot_id = %s",
-                    (slot_id,),
+                    DbConfig.UPDATE_SLOT_IN_DB,(slot_id,),
                 )
                 return slot_id
             else:
@@ -50,7 +48,7 @@ class ParkingSlot:
         # fetch from parkingslots to see available slots
         with OpenDb() as cursor:
             cursor.execute(
-                "SELECT slot_id, slot_type FROM ParkingSlots WHERE is_occupied = False"
+                DbConfig.GET_AVAILABLE_SLOT
             )
             slots = cursor.fetchall()
         return slots if slots else None
@@ -83,7 +81,7 @@ class ParkingSlot:
                 elif slot_type == 3:
                     return None  # Exit
                 else:
-                    print("Invalid input! Please enter a valid option.")
+                    print(System.INVALID_OPTION)
             except ValueError:
                 print("Invalid input! Please enter a number.")
 
@@ -100,7 +98,7 @@ class ParkingSlot:
                 option = int(input("Enter (1/2/3): "))
                 if option in [1, 2, 3]:
                     return option
-                print("Invalid input! Please enter a valid option.")
+                print(System.INVALID_OPTION)
             except ValueError:
                 print("Invalid input! Please enter a number.")
 
@@ -115,7 +113,7 @@ class ParkingSlot:
     def remove_slot(self):
         # Fetching from ParkingSlots
         with OpenDb() as cursor:
-            cursor.execute("SELECT slot_id, slot_type, is_occupied FROM ParkingSlots")
+            cursor.execute(DbConfig.REMOVE_SLOT)
             slots = cursor.fetchall()
 
             # no slots available then
@@ -149,7 +147,7 @@ class ParkingSlot:
 
                 # Deleting slot from ParkingSlots
                 cursor.execute(
-                    "DELETE FROM ParkingSlots WHERE slot_id = %s", (slot_id,)
+                    DbConfig.DELETE_SLOT, (slot_id,)
                 )
                 if cursor.rowcount > 0:
                     # if any update is done then only print this
@@ -172,17 +170,13 @@ class ParkingSlot:
             return
         with OpenDb() as cursor:
             cursor.execute(
-                "INSERT INTO ParkingSlots (slot_type) VALUES (%s)", (slot_type,)
+                DbConfig.ADD_SLOT, (slot_type,)
             )
         print(f"{slot_type} slot added successfully!")
-
     """
-
     This for managing slots 
     Adding and removing slots
-
     """
-
     def manage_slot(self):
         while True:
             option = self.manage_slot_menu()

@@ -1,6 +1,5 @@
 import getpass
-from src.utils import db
-from src.models import user, pricing, parking_slot, parking_record
+from src.models import user, pricing, parking_slot, parking_record , income_record
 from src.system import System
 
 
@@ -9,16 +8,16 @@ class ParkingSystem:
         self.current_user = None
 
     def welcome_page(self):
-        print("Welcome to WatchGuard Parking")
+        print(System.WELCOME)
 
         while True:
             username = input(System.ENTER_NAME).strip()
             # Using this you can make your password invisible in terminal or cmd
-            password = getpass.getpass("Enter your Password: ")
+            password = getpass.getpass(System.ENTER_PASSWORD)
 
             auth = user.User(username=username, password=password).login()
             if not auth:
-                print("\n** Username or Password is incorrect. Please try again. **\n")
+                print(System.INVALID_USER_PASSWORD)
             else:
                 self.current_user = {
                     "user_id": auth[0],
@@ -32,17 +31,17 @@ class ParkingSystem:
         elif self.current_user["role"] == 2:
             self.customer_menu()
         else:
-            print("Something went wrong.")
+            print(System.SOMETHING_WRONG)
 
     def get_option(self, menu_options):
         while True:
             try:
-                option = int(input("Enter Your Option: "))
+                option = int(input(f"{System.ENTER_OPTION}: "))
                 if option in menu_options:
                     return option
-                print("Invalid option. Please try again.")
+                print(System.INVALID_OPTION)
             except ValueError:
-                print("Input must be an integer.")
+                print(System.MUST_INTEGER)
 
     def admin_menu(self):
         """Admin menu options."""
@@ -58,10 +57,10 @@ class ParkingSystem:
                 pricing.Pricing().set_price()
             elif option == 4:
                 # Implement view income functionality
-                pass
+                income_record.IncomeRecord.view_income()
             elif option == 5:
                 # Implement total income per vehicle
-                pass
+                income_record.IncomeRecord.view_total_income_per_vehicle()
             elif option == 6:
                 self.current_user = None
                 self.welcome_page()

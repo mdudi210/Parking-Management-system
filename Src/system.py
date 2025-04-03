@@ -1,4 +1,6 @@
 class System:
+    WELCOME = "Welcome to WatchGuard Parking"
+    SOMETHING_WRONG = "Something went wrong."
     ADMIN_MENU = """\nWelcome Admin, please select an option:
                 1. Add User
                 2. Manage Parking Slots
@@ -32,5 +34,19 @@ class System:
     ADD_USER = """ADD USER
                 1. Add User
                 2. Exit"""
+    
+    INCOME_MENU = """\nChoose the income view option:
+    1. Daily Income
+    2. Monthly Income
+    """
 
+    ENTER_OPTION = "Enter your option"
     ENTER_NAME = "Enter your User Name: "
+    ENTER_PASSWORD = "Enter your Password: "
+
+    INVALID_OPTION = "Invalid input! Please enter a valid option."
+    INVALID_USER_PASSWORD = "\n** Username or Password is incorrect. Please try again. **\n"
+    
+    MUST_INTEGER = "Input must be an integer."
+    NO_INCOME_RECORD = "No income recorded for"
+    TOTAL_INCOME = "\nTotal Income for"

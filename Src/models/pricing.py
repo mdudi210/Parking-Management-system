@@ -1,6 +1,6 @@
 from src.utils.db import OpenDb
 from src.system import System
-
+from src.dbutils import DbConfig
 
 class Pricing:
     """
@@ -14,12 +14,12 @@ class Pricing:
                 option = int(input("Enter (1/2/3): "))
                 if option in [1, 2, 3]:
                     return option
-                print("Invalid input! Please enter 1, 2, or 3.")
+                print(System.INVALID_OPTION)
             except ValueError:
                 print("Invalid input! Please enter a number.")
 
     """
-    This will set the vaild of price
+    This will set the valid of price
     """
 
     def set_price(self):
@@ -46,7 +46,7 @@ class Pricing:
             price = input(f"Enter the price per hour for {vehicle_type}: ").strip()
             if price.replace(".", "", 1).isdigit():
                 return float(price)
-            print("Invalid input! Please enter a valid number.")
+            print(System.INVALID_OPTION)
 
     """
     This will update date in db
@@ -55,10 +55,7 @@ class Pricing:
     def update_price_in_db(self, vehicle_type, price):
         with OpenDb() as cursor:
             cursor.execute(
-                """INSERT INTO Pricing (vehicle_type, rate_per_hour) 
-                   VALUES (%s, %s) 
-                   ON DUPLICATE KEY UPDATE rate_per_hour = %s""",
-                (vehicle_type, price, price),
+                DbConfig.UPDATE_PRICE_IN_DB,(vehicle_type, price, price),
             )
 
     """
@@ -68,8 +65,7 @@ class Pricing:
     def get_price(self, vehicle_type):
         with OpenDb() as cursor:
             cursor.execute(
-                "SELECT rate_per_hour FROM Pricing WHERE vehicle_type = %s",
-                (vehicle_type,),
+                DbConfig.GET_PRICE,(vehicle_type,),
             )
             result = cursor.fetchone()
         if result:

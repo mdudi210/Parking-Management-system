@@ -1,6 +1,7 @@
 import hashlib
 from src.utils import db
 from src.system import System
+from src.dbutils import DbConfig
 
 
 class User:
@@ -24,11 +25,12 @@ class User:
 
     def login(self):
         hashed_password = self.hash_password(self.password)
+        # with db.OpenDb(DbConfig.LOGIN_INSERT,(self.username,),'fetchone') as data:
+        #     result = data
         with db.OpenDb() as cursor:
             cursor.execute(
-                "SELECT user_id,username, password,role FROM users WHERE username=%s",
-                (self.username,),
-            )
+                DbConfig.LOGIN_INSERT,(self.username,),
+                )
             result = cursor.fetchone()
 
         if result and result[2] == hashed_password:
@@ -58,7 +60,7 @@ class User:
                 if option == 2:
                     return
                 elif option != 1:
-                    print("Invalid input! Please enter 1 or 2.")
+                    print(System.INVALID_OPTION)
                     continue
             except ValueError:
                 print("Invalid input! Please enter a number.")
@@ -81,8 +83,8 @@ class User:
     """
 
     def get_user_details(self):
-        self.username = input("Enter your username: ").strip()
-        self.password = input("Enter your password: ")
+        self.username = input(System.ENTER_NAME).strip()
+        self.password = input(System.ENTER_PASSWORD)
         self.role = input("Enter the role (default: user): ").strip().lower()
         self.role = "user" if not self.role else self.role
 
@@ -91,9 +93,11 @@ class User:
     """
 
     def check_existing_user(self):
+        # with db.OpenDb(DbConfig.CHECK_EXISTING_USER,(self.username,),'fetchone') as data:
+        #     return data is not None
         with db.OpenDb() as cursor:
             cursor.execute(
-                "SELECT username FROM users WHERE username=%s", (self.username,)
+                DbConfig.CHECK_EXISTING_USER, (self.username,)
             )
             return cursor.fetchone() is not None
 
@@ -105,8 +109,9 @@ class User:
         role_id = 1 if self.role == "admin" else 2
         hashed_password = self.hash_password(self.password)
 
+        # with db.OpenDb(DbConfig.ADD_USER_TO_DB,(self.username, hashed_password, role_id)):
+        #     pass
         with db.OpenDb() as cursor:
             cursor.execute(
-                "INSERT INTO Users(username, password, role) VALUES (%s, %s, %s)",
-                (self.username, hashed_password, role_id),
+                DbConfig.ADD_USER_TO_DB,(self.username, hashed_password, role_id),
             )
