@@ -44,7 +44,7 @@
 
 # Flow of project
 
-# This is default Costumer in our Database
+- This is default Costumer in our Database
     Welcome to WatchGuard Parking
     Enter your User Name: user
     Enter your Password: user123 
@@ -58,7 +58,7 @@
                     5. Log Out
     Enter your option:
 
-# This is default admin in our Database
+- This is default admin in our Database
     Enter your User Name: admin
     Enter your Password: admin123
     Login successful!
