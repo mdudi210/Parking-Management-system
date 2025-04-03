@@ -51,11 +51,11 @@
     Login successful! <br>
 
     Welcome User, please select an option: <br>
-    1. View Available Parking Slots <br>
-    2. Park Vehicle <br>
-    3. Unpark Vehicle <br>
-    4. View Parking History <br>
-    5. Log Out <br>
+        1. View Available Parking Slots <br>
+        2. Park Vehicle <br>
+        3. Unpark Vehicle <br>
+        4. View Parking History <br>
+        5. Log Out <br>
     Enter your option: <br>
 
 - This is default admin in our Database
@@ -64,10 +64,10 @@
     Login successful! <br>
 
     Welcome Admin, please select an option: <br>
-    1. Add User <br>
-    2. Manage Parking Slots <br>
-    3. Set Pricing Rates <br>
-    4. View Income (Daily/Monthly) <br>
-    5. View Total Income per Vehicle <br>
-    6. Log Out <br>
+        1. Add User <br>
+        2. Manage Parking Slots <br>
+        3. Set Pricing Rates <br>
+        4. View Income (Daily/Monthly) <br>
+        5. View Total Income per Vehicle <br>
+        6. Log Out <br>
     Enter your option: <br>
