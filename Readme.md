@@ -44,30 +44,30 @@
 
 # Flow of project
 
-- # This is default Costumer in our Database
-    Welcome to WatchGuard Parking
-    Enter your User Name: user
-    Enter your Password: user123 
-    Login successful!
+- This is default Costumer in our Database
+    Welcome to WatchGuard Parking <br>
+    Enter your User Name: user <br>
+    Enter your Password: user123 <br>
+    Login successful! <br>
+<br>
+    Welcome User, please select an option: <br>
+                    1. View Available Parking Slots <br>
+                    2. Park Vehicle <br>
+                    3. Unpark Vehicle <br>
+                    4. View Parking History <br>
+                    5. Log Out <br>
+    Enter your option: <br>
 
-    Welcome User, please select an option:
-                    1. View Available Parking Slots
-                    2. Park Vehicle
-                    3. Unpark Vehicle
-                    4. View Parking History
-                    5. Log Out
-    Enter your option:
+- This is default admin in our Database
+    Enter your User Name: admin <br>
+    Enter your Password: admin123 <br>
+    Login successful! <br>
 
-- # This is default admin in our Database
-    Enter your User Name: admin
-    Enter your Password: admin123
-    Login successful!
-
-    Welcome Admin, please select an option:
-                    1. Add User
-                    2. Manage Parking Slots
-                    3. Set Pricing Rates
-                    4. View Income (Daily/Monthly)
-                    5. View Total Income per Vehicle
-                    6. Log Out
-    Enter your option:
+    Welcome Admin, please select an option: <br>
+                    1. Add User <br>
+                    2. Manage Parking Slots <br>
+                    3. Set Pricing Rates <br>
+                    4. View Income (Daily/Monthly) <br>
+                    5. View Total Income per Vehicle <br>
+                    6. Log Out <br>
+    Enter your option: <br>
