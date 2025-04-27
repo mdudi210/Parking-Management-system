@@ -12,7 +12,7 @@
             - venv\Scripts\Activate.ps1 
         - {For Mac}
             - python -m venv venv
-            - Source .venv\Scripts\Activate.ps1
+            - source .venv\Scripts\Activate
 
 - Step3:
     - Upgrade the pip version
