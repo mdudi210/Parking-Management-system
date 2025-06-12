@@ -1,6 +1,7 @@
 from src.utils.db import OpenDb
 from src.system import System
 from src.dbutils import DbConfig
+import sys
 
 
 class ParkingSlot:
@@ -84,6 +85,9 @@ class ParkingSlot:
                     print(System.INVALID_OPTION)
             except ValueError:
                 print("Invalid input! Please enter a number.")
+            except KeyboardInterrupt:
+                print(System.EXITING)
+                sys.exit(0)
 
     """
 
@@ -101,6 +105,9 @@ class ParkingSlot:
                 print(System.INVALID_OPTION)
             except ValueError:
                 print("Invalid input! Please enter a number.")
+            except KeyboardInterrupt:
+                print(System.EXITING)
+                sys.exit(0)
 
     """
 
@@ -156,6 +163,9 @@ class ParkingSlot:
                     print(f"Slot ID {slot_id} not found.")
             except ValueError:
                 print("Invalid input. Please enter a valid slot ID.")
+            except KeyboardInterrupt:
+                print(System.EXITING)
+                sys.exit(0)
 
     """
 

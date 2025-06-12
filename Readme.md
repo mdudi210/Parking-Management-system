@@ -12,7 +12,7 @@
             - venv\Scripts\Activate.ps1 
         - {For Mac}
             - python -m venv venv
-            - Source .venv\Scripts\Activate.ps1
+            - source .venv\Scripts\activate
 
 - Step3:
     - Upgrade the pip version
@@ -71,3 +71,6 @@
         5. View Total Income per Vehicle <br>
         6. Log Out <br>
     Enter your option: <br>
+
+**Change the folder's
+ name if it's starting with Capital Character to Small Character**

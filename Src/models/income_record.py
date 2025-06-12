@@ -2,7 +2,7 @@ from src.utils import db
 from datetime import datetime
 from src.dbutils import DbConfig
 from src.system import System
-
+import sys
 
 class IncomeRecord:
     @staticmethod
@@ -19,6 +19,9 @@ class IncomeRecord:
                 print(System.INVALID_OPTION)
         except ValueError:
             print(System.INVALID_OPTION)
+        except KeyboardInterrupt:
+            print(System.EXITING)
+            sys.exit(0)
 
 
     @staticmethod
@@ -75,14 +78,14 @@ class IncomeRecord:
         #     vehicles = data
             
         #     if not vehicles:
-        #         print("No vehicles found in the system.")
+        #         print(System.NO_VEHICLE_FOUND)
         #         return
-        #     print("\nAvailable Vehicles:")
+        #     print(System.AVAILABLE_VEHICLES)
         #     for vehicle in vehicles:
         #         print(f"ID: {vehicle[0]} | Number: {vehicle[1]}")
                 
         #     try:
-        #         vehicle_id = int(input("\nEnter Vehicle ID to view income: "))
+        #         vehicle_id = int(input(System.ENTER_VEHICLE_ID))
         #     except ValueError:
         #         print("Invalid input. Please enter a valid Vehicle ID.")
         #         return
@@ -94,17 +97,20 @@ class IncomeRecord:
             vehicles = cursor.fetchall()
             
             if not vehicles:
-                print("No vehicles found in the system.")
+                print(System.NO_VEHICLE_FOUND)
                 return
-            print("\nAvailable Vehicles:")
+            print(System.AVAILABLE_VEHICLES)
             for vehicle in vehicles:
                 print(f"ID: {vehicle[0]} | Number: {vehicle[1]}")
                 
             try:
-                vehicle_id = int(input("\nEnter Vehicle ID to view income: "))
+                vehicle_id = int(input(System.ENTER_VEHICLE_ID))
             except ValueError:
                 print(System.INVALID_OPTION)
                 return
+            except KeyboardInterrupt:
+                print(System.EXITING)
+                sys.exit(0)
             
             # Fetch total income for the selected vehicle
         

@@ -1,4 +1,5 @@
-from src.models import parking_system
+from src.models import ParkingSystem
 
-parking_system.ParkingSystem().welcome_page()
+ParkingSystem().welcome_page()
+
 

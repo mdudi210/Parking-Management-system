@@ -1,6 +1,7 @@
 from src.utils.db import OpenDb
 from src.system import System
 from src.dbutils import DbConfig
+import sys
 
 class Pricing:
     """
@@ -17,6 +18,9 @@ class Pricing:
                 print(System.INVALID_OPTION)
             except ValueError:
                 print("Invalid input! Please enter a number.")
+            except KeyboardInterrupt:
+                print(System.EXITING)
+                sys.exit(0)
 
     """
     This will set the valid of price

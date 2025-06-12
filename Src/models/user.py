@@ -2,6 +2,7 @@ import hashlib
 from src.utils import db
 from src.system import System
 from src.dbutils import DbConfig
+import sys
 
 
 class User:
@@ -11,12 +12,11 @@ class User:
         self.password = password
         self.role = role
 
-    """
-    This to hash password
-    """
+    
 
     @staticmethod
     def hash_password(password):
+        """ This to hash password """
         return hashlib.sha512(password.encode("utf-8")).hexdigest()
 
     """
@@ -65,6 +65,9 @@ class User:
             except ValueError:
                 print("Invalid input! Please enter a number.")
                 continue
+            except KeyboardInterrupt:
+                print(System.EXITING)
+                sys.exit(0)
 
             # Getting user details
             self.get_user_details()

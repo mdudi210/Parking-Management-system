@@ -1,7 +1,7 @@
 import getpass
 from src.models import user, pricing, parking_slot, parking_record , income_record
 from src.system import System
-
+import sys
 
 class ParkingSystem:
     def __init__(self):
@@ -11,9 +11,12 @@ class ParkingSystem:
         print(System.WELCOME)
 
         while True:
-            username = input(System.ENTER_NAME).strip()
-            # Using this you can make your password invisible in terminal or cmd
-            password = getpass.getpass(System.ENTER_PASSWORD)
+            try :
+                username = input(System.ENTER_NAME).strip()
+                password = getpass.getpass(System.ENTER_PASSWORD)
+            except KeyboardInterrupt:
+                print(System.EXITING)
+                sys.exit(0)
 
             auth = user.User(username=username, password=password).login()
             if not auth:
@@ -42,6 +45,9 @@ class ParkingSystem:
                 print(System.INVALID_OPTION)
             except ValueError:
                 print(System.MUST_INTEGER)
+            except KeyboardInterrupt:
+                print(System.EXITING)
+                sys.exit(0)
 
     def admin_menu(self):
         """Admin menu options."""

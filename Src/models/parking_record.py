@@ -3,6 +3,8 @@ from src.utils.db import OpenDb
 from src.models.vehicle_register import VehicleRegister
 from src.models.parking_slot import ParkingSlot
 from src.dbutils import DbConfig
+from src.system import System
+import sys
 
 
 class ParkingRecord:
@@ -22,7 +24,7 @@ class ParkingRecord:
         #     stored = data
 
         #     if not stored:
-        #         print("No parking history found for this user!")
+        #         print(System.NO_PARKING_HISTORY)
         #         return
             
         #     # Displaying Parking History
@@ -56,7 +58,7 @@ class ParkingRecord:
             stored = cursor.stored_results()
 
             if not stored:
-                print("No parking history found for this user!")
+                print(System.NO_PARKING_HISTORY)
                 return
 
             # Displaying Parking History
@@ -85,12 +87,16 @@ class ParkingRecord:
     """
     def park_vehicle(self):
         # Taking info for parking a vehicle
-        vehicle_number = input("Enter Vehicle Number: ").strip()
-        owner_name = input("Enter Owner Name: ").strip()
-        vehicle_type = input("Enter Vehicle Type (Car/Bike): ").strip().lower()
+        try:
+            vehicle_number = input("Enter Vehicle Number: ").strip()
+            owner_name = input("Enter Owner Name: ").strip()
+            vehicle_type = input("Enter Vehicle Type (Car/Bike): ").strip().lower()
+        except KeyboardInterrupt:
+            print(System.EXITING)
+            sys.exit(0)
 
         if vehicle_type not in ["car", "bike"]:
-            print("Invalid vehicle type. Please enter 'Car' or 'Bike'.")
+            print(System.INVALID_VEHICLE_TYPE)
             return False
 
         # Mapping of vehicle and vehicle type
@@ -101,7 +107,7 @@ class ParkingRecord:
 
         if not vehicle_type_db:
             # Return None for invalid input
-            print("Invalid vehicle type. Please enter 'Car' or 'Bike'.")
+            print(System.INVALID_VEHICLE_TYPE)
             return None
 
         # Register vehicle (or get existing one)
@@ -221,10 +227,14 @@ class ParkingRecord:
         """
         need to implement auth for 
         """
-        vehicle_type = input("Enter Vehicle Type (Car/Bike): ").strip().lower()
+        try:
+            vehicle_type = input("Enter Vehicle Type (Car/Bike): ").strip().lower()
+        except KeyboardInterrupt:
+            print(System.EXITING)
+            sys.exit(0)
 
         if vehicle_type not in ["car", "bike"]:
-            print("Invalid vehicle type. Please enter 'Car' or 'Bike'.")
+            print(System.INVALID_VEHICLE_TYPE)
             return False
 
         # Map user input to database values
@@ -233,7 +243,7 @@ class ParkingRecord:
         # Convert input to correct database format
         vehicle_type_db = vehicle_type_mapping.get(vehicle_type)
         if not vehicle_type_db:
-            print("Invalid vehicle type. Please enter 'Car' or 'Bike'.")
+            print(System.INVALID_VEHICLE_TYPE)
             return None  # Return None for invalid input
 
         # print(self.user_id, self.username, self.role)
